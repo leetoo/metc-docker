@@ -1,4 +1,69 @@
-CREATE TABLE IF NOT EXISTS ors_users (
+Installing MySQL system tables...
+OK
+Filling help tables...
+OK
+
+To start mysqld at boot time you have to copy
+support-files/mysql.server to the right place for your system
+
+PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER !
+To do so, start the server, then issue the following commands:
+/tmp/marketcetera-2.2.1/mysql/bin/mysqladmin -u root password 'new-password'
+/tmp/marketcetera-2.2.1/mysql/bin/mysqladmin -u root -h ramius-testbox password 'new-password'
+
+Alternatively you can run:
+/tmp/marketcetera-2.2.1/mysql/bin/mysql_secure_installation
+
+which will also give you the option of removing the test
+databases and anonymous user created by default.  This is
+strongly recommended for production servers.
+
+See the manual for more instructions.
+
+You can start the MySQL daemon with:
+cd . ; /tmp/marketcetera-2.2.1/mysql/bin/mysqld_safe &
+
+You can test the MySQL daemon with mysql-test-run.pl
+cd mysql-test ; perl mysql-test-run.pl
+
+Please report any problems with the ./bin/mysqlbug script!
+
+The latest information about MySQL is available on the web at
+http://www.mysql.com
+Support MySQL by buying support/licenses at http://shop.mysql.com
+--
+-- Sat Feb 28 04:58:43 PST 2015
+--
+--------------
+CREATE USER 'marketcetera'@'localhost' IDENTIFIED BY 'marketcetera'
+--------------
+
+--------------
+CREATE DATABASE marketcetera
+--------------
+
+--------------
+GRANT ALL PRIVILEGES ON marketcetera.* TO 'marketcetera'@'localhost'
+--------------
+
+--------------
+DROP TABLE IF EXISTS id_repository
+--------------
+
+--------------
+DROP TABLE IF EXISTS execreports
+--------------
+
+--------------
+DROP TABLE IF EXISTS reports
+--------------
+
+--------------
+DROP TABLE IF EXISTS ors_users
+--------------
+
+--------------
+CREATE TABLE ors_users (
     id BIGINT NOT NULL AUTO_INCREMENT,
     lastUpdated DATETIME,
     updateCount INTEGER NOT NULL,
@@ -11,9 +76,11 @@ CREATE TABLE IF NOT EXISTS ors_users (
     systemdata text,
     PRIMARY KEY (id),
     UNIQUE (name)
-);
+)
+--------------
 
-CREATE TABLE IF NOT EXISTS reports (
+--------------
+CREATE TABLE reports (
     id BIGINT NOT NULL AUTO_INCREMENT,
     lastUpdated DATETIME,
     updateCount INTEGER NOT NULL,
@@ -34,9 +101,11 @@ CREATE TABLE IF NOT EXISTS reports (
      REFERENCES ors_users(id),
     CONSTRAINT fk_reports_viewer_id FOREIGN KEY (viewer_id)
      REFERENCES ors_users(id)
-);
+)
+--------------
 
-CREATE TABLE IF NOT EXISTS execreports (
+--------------
+CREATE TABLE execreports (
     id BIGINT NOT NULL AUTO_INCREMENT,
     lastUpdated DATETIME,
     updateCount INTEGER NOT NULL,
@@ -73,10 +142,23 @@ CREATE TABLE IF NOT EXISTS execreports (
      REFERENCES ors_users(id),
     CONSTRAINT fk_execreports_report_id FOREIGN KEY (report_id)
      REFERENCES reports(id)
-);
+)
+--------------
 
-CREATE TABLE IF NOT EXISTS id_repository (
+--------------
+CREATE TABLE id_repository (
     id BIGINT NOT NULL AUTO_INCREMENT,
     nextAllowedID BIGINT NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
-);
+)
+--------------
+
+--------------
+INSERT INTO ors_users (id,updateCount,lastUpdated,name,description,hashedPassword,active,superuser)
+VALUES (1,0,now(),"admin",NULL,"6anqbgybi82pveayzrkt3egjkwfwdg5",1,1) ON DUPLICATE KEY
+UPDATE hashedPassword = "6anqbgybi82pveayzrkt3egjkwfwdg5"
+--------------
+
+--
+-- Sat Feb 28 04:58:47 PST 2015
+--

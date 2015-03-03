@@ -1,0 +1,12 @@
+metc:
+  build: .
+  ports:
+   - "3306:3306"
+   - "61616:61616"
+  links:
+   - mysql
+
+mysql:
+  image: mysql
+  environment:
+   - MYSQL_ROOT_PASSWORD=root

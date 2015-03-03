@@ -1,4 +1,12 @@
-CREATE TABLE IF NOT EXISTS ors_users (
+DROP TABLE IF EXISTS id_repository;
+
+DROP TABLE IF EXISTS execreports;
+
+DROP TABLE IF EXISTS reports;
+
+DROP TABLE IF EXISTS ors_users;
+
+CREATE TABLE ors_users (
     id BIGINT NOT NULL AUTO_INCREMENT,
     lastUpdated DATETIME,
     updateCount INTEGER NOT NULL,
@@ -13,7 +21,7 @@ CREATE TABLE IF NOT EXISTS ors_users (
     UNIQUE (name)
 );
 
-CREATE TABLE IF NOT EXISTS reports (
+CREATE TABLE reports (
     id BIGINT NOT NULL AUTO_INCREMENT,
     lastUpdated DATETIME,
     updateCount INTEGER NOT NULL,
@@ -36,7 +44,7 @@ CREATE TABLE IF NOT EXISTS reports (
      REFERENCES ors_users(id)
 );
 
-CREATE TABLE IF NOT EXISTS execreports (
+CREATE TABLE execreports (
     id BIGINT NOT NULL AUTO_INCREMENT,
     lastUpdated DATETIME,
     updateCount INTEGER NOT NULL,
@@ -75,8 +83,11 @@ CREATE TABLE IF NOT EXISTS execreports (
      REFERENCES reports(id)
 );
 
-CREATE TABLE IF NOT EXISTS id_repository (
+CREATE TABLE id_repository (
     id BIGINT NOT NULL AUTO_INCREMENT,
     nextAllowedID BIGINT NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
 );
+INSERT INTO ors_users (id,updateCount,lastUpdated,name,description,hashedPassword,active,superuser)
+VALUES (1,0,now(),"admin",NULL,"6anqbgybi82pveayzrkt3egjkwfwdg5",1,1) ON DUPLICATE KEY
+UPDATE hashedPassword = "6anqbgybi82pveayzrkt3egjkwfwdg5";
